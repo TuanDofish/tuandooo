@@ -24,7 +24,7 @@ reg = LinearRegression().fit(X_train, y_train)
 lasso = Lasso(alpha=0.1).fit(X_train, y_train)
 
 # Mô hình Neural Network
-nn = MLPRegressor(hidden_layer_sizes=(50, 50), max_iter=1000).fit(X_train, y_train)
+nn = MLPRegressor(hidden_layer_sizes=(50, 50), activation='relu', max_iter=1000).fit(X_train, y_train)
 
 # Các hàm tính toán
 def NSE(y_test, y_predict):  # càng gần 1 càng tốt
