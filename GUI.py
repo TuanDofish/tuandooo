@@ -59,15 +59,15 @@ if st.button("Dự đoán"):
             # Dự đoán theo mô hình đã chọn
             if model_choice == "Linear Regression":
                 y_input_predict = reg.predict(X_input)
-                st.success(f"Kết quả dự đoán theo Linear Regression: {y_input_predict[0]:.2f}")
+                st.success(f"Kết quả dự đoán theo Linear Regression: {y_input_predict[0]:.6f}")
             
             elif model_choice == "Lasso Regression":
                 y_input_predict = lasso.predict(X_input)
-                st.success(f"Kết quả dự đoán theo Lasso Regression: {y_input_predict[0]:.2f}")
+                st.success(f"Kết quả dự đoán theo Lasso Regression: {y_input_predict[0]:.6f}")
             
             elif model_choice == "Neural Network":
                 y_input_predict = nn.predict(X_input)
-                st.success(f"Kết quả dự đoán theo Neural Network: {y_input_predict[0]:.2f}")
+                st.success(f"Kết quả dự đoán theo Neural Network: {y_input_predict[0]:.6f}")
             
         except ValueError:
             st.error("Vui lòng nhập đúng định dạng số!")
