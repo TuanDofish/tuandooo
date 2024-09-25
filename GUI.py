@@ -45,6 +45,9 @@ low_value = st.text_input("Giá thấp nhất trong ngày:", "")
 volume_value = st.text_input("Khối lượng giao dịch:", "")
 chg_value = st.text_input("% Thay đổi so với giá trước đó:", "")
 
+# Lựa chọn mô hình dự đoán
+model_choice = st.selectbox("Chọn mô hình dự đoán:", ("Linear Regression", "Lasso Regression", "Neural Network"))
+
 # Nút dự đoán
 if st.button("Dự đoán"):
     if open_value and high_value and low_value and volume_value and chg_value:
