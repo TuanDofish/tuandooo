@@ -3,36 +3,28 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression, Lasso
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPRegressor
-from sklearn.preprocessing import StandardScaler
 import math
 
 # Đọc dữ liệu
 data = pd.read_csv('Gold_Price.csv') 
+dt_train, dt_test = train_test_split(data, test_size=0.3, shuffle=True)
 
-# Chia dữ liệu thành tập huấn luyện và tập kiểm tra
-dt_train, dt_test = train_test_split(data, test_size=0.3, shuffle=True, random_state=42)
-
-# Chia dữ liệu thành đặc trưng (X) và mục tiêu (y)
-X_train = dt_train.drop(['Date', 'Price'], axis=1)
+# Chia dữ liệu
+X_train = dt_train.drop(['Date', 'Price'], axis=1) 
 y_train = dt_train['Price']
 X_test = dt_test.drop(['Date', 'Price'], axis=1)
 y_test = dt_test['Price']
 
-# Chuẩn hóa dữ liệu
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-
 # Mô hình Linear Regression
-reg = LinearRegression().fit(X_train_scaled, y_train)
+reg = LinearRegression().fit(X_train, y_train)
 
-# Mô hình Lasso Regression 
-lasso = Lasso(alpha=0.01, max_iter=10000).fit(X_train_scaled, y_train)
+# Mô hình Lasso Regression
+lasso = Lasso(alpha=0.1).fit(X_train, y_train)
 
 # Mô hình Neural Network
-nn = MLPRegressor(hidden_layer_sizes=(25, 25), alpha=0.0001, max_iter=1000, random_state=42, early_stopping=True).fit(X_train_scaled, y_train)
+nn = MLPRegressor(hidden_layer_sizes=(50, 50), max_iter=1000).fit(X_train, y_train)
 
 # Các hàm tính toán
 def NSE(y_test, y_predict):  # càng gần 1 càng tốt
@@ -63,19 +55,18 @@ if st.button("Dự đoán"):
         try:
             # Chuyển đổi giá trị đầu vào thành mảng numpy
             X_input = np.array([float(open_value), float(high_value), float(low_value), float(volume_value), float(chg_value)]).reshape(1, -1)
-            X_input_scaled = scaler.transform(X_input)  # Chuẩn hóa dữ liệu đầu vào
             
             # Dự đoán theo mô hình đã chọn
             if model_choice == "Linear Regression":
-                y_input_predict = reg.predict(X_input_scaled)
+                y_input_predict = reg.predict(X_input)
                 st.success(f"Kết quả dự đoán theo Linear Regression: {y_input_predict[0]:.2f}")
             
             elif model_choice == "Lasso Regression":
-                y_input_predict = lasso.predict(X_input_scaled)
+                y_input_predict = lasso.predict(X_input)
                 st.success(f"Kết quả dự đoán theo Lasso Regression: {y_input_predict[0]:.2f}")
             
             elif model_choice == "Neural Network":
-                y_input_predict = nn.predict(X_input_scaled)
+                y_input_predict = nn.predict(X_input)
                 st.success(f"Kết quả dự đoán theo Neural Network: {y_input_predict[0]:.2f}")
             
         except ValueError:
@@ -87,7 +78,7 @@ if st.button("Dự đoán"):
 st.write("Tỉ lệ dự đoán đúng trên tập: ")
 
 # Linear Regression
-y_predict_lr = reg.predict(X_test_scaled)
+y_predict_lr = reg.predict(X_test)
 st.write("**Linear Regression**")
 st.write(f"R2: {r2_score(y_test, y_predict_lr):.6f}")
 st.write(f"NSE: {NSE(y_test, y_predict_lr):.6f}")
@@ -95,7 +86,7 @@ st.write(f"MAE: {MAE(y_test, y_predict_lr):.6f}")
 st.write(f"RMSE: {math.sqrt(mean_squared_error(y_test, y_predict_lr)):.6f}")
 
 # Lasso
-y_predict_lasso = lasso.predict(X_test_scaled)
+y_predict_lasso = lasso.predict(X_test)
 st.write("**Lasso Regression**")
 st.write(f"R2: {r2_score(y_test, y_predict_lasso):.6f}")
 st.write(f"NSE: {NSE(y_test, y_predict_lasso):.6f}")
@@ -103,7 +94,7 @@ st.write(f"MAE: {MAE(y_test, y_predict_lasso):.6f}")
 st.write(f"RMSE: {math.sqrt(mean_squared_error(y_test, y_predict_lasso)):.6f}")
 
 # Neural Network
-y_predict_nn = nn.predict(X_test_scaled)
+y_predict_nn = nn.predict(X_test)
 st.write("**Neural Network**")
 st.write(f"R2: {r2_score(y_test, y_predict_nn):.6f}")
 st.write(f"NSE: {NSE(y_test, y_predict_nn):.6f}")
