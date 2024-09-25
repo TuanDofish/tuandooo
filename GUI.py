@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression, Lasso
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import StandardScaler
 import math
@@ -28,11 +28,11 @@ X_test_scaled = scaler.transform(X_test)
 # Mô hình Linear Regression
 reg = LinearRegression().fit(X_train_scaled, y_train)
 
-# Mô hình Lasso Regression (tăng số lần lặp tối đa)
+# Mô hình Lasso Regression 
 lasso = Lasso(alpha=0.01, max_iter=10000).fit(X_train_scaled, y_train)
 
-# Mô hình Neural Network (tối ưu hóa siêu tham số)
-nn = MLPRegressor(hidden_layer_sizes=(50, 50), max_iter=1000, random_state=42, early_stopping=True).fit(X_train_scaled, y_train)
+# Mô hình Neural Network
+nn = MLPRegressor(hidden_layer_sizes=(25, 25), alpha=0.0001, max_iter=1000, random_state=42, early_stopping=True).fit(X_train_scaled, y_train)
 
 # Các hàm tính toán
 def NSE(y_test, y_predict):  # càng gần 1 càng tốt
@@ -89,23 +89,23 @@ st.write("Tỉ lệ dự đoán đúng trên tập: ")
 # Linear Regression
 y_predict_lr = reg.predict(X_test_scaled)
 st.write("**Linear Regression**")
-st.write(f"R2: {r2_score(y_test, y_predict_lr):.2f}")
-st.write(f"NSE: {NSE(y_test, y_predict_lr):.2f}")
-st.write(f"MAE: {MAE(y_test, y_predict_lr):.2f}")
-st.write(f"RMSE: {math.sqrt(mean_squared_error(y_test, y_predict_lr)):.2f}")
+st.write(f"R2: {r2_score(y_test, y_predict_lr):.6f}")
+st.write(f"NSE: {NSE(y_test, y_predict_lr):.6f}")
+st.write(f"MAE: {MAE(y_test, y_predict_lr):.6f}")
+st.write(f"RMSE: {math.sqrt(mean_squared_error(y_test, y_predict_lr)):.6f}")
 
 # Lasso
 y_predict_lasso = lasso.predict(X_test_scaled)
 st.write("**Lasso Regression**")
-st.write(f"R2: {r2_score(y_test, y_predict_lasso):.2f}")
-st.write(f"NSE: {NSE(y_test, y_predict_lasso):.2f}")
-st.write(f"MAE: {MAE(y_test, y_predict_lasso):.2f}")
-st.write(f"RMSE: {math.sqrt(mean_squared_error(y_test, y_predict_lasso)):.2f}")
+st.write(f"R2: {r2_score(y_test, y_predict_lasso):.6f}")
+st.write(f"NSE: {NSE(y_test, y_predict_lasso):.6f}")
+st.write(f"MAE: {MAE(y_test, y_predict_lasso):.6f}")
+st.write(f"RMSE: {math.sqrt(mean_squared_error(y_test, y_predict_lasso)):.6f}")
 
 # Neural Network
 y_predict_nn = nn.predict(X_test_scaled)
 st.write("**Neural Network**")
-st.write(f"R2: {r2_score(y_test, y_predict_nn):.2f}")
-st.write(f"NSE: {NSE(y_test, y_predict_nn):.2f}")
-st.write(f"MAE: {MAE(y_test, y_predict_nn):.2f}")
-st.write(f"RMSE: {math.sqrt(mean_squared_error(y_test, y_predict_nn)):.2f}")
+st.write(f"R2: {r2_score(y_test, y_predict_nn):.6f}")
+st.write(f"NSE: {NSE(y_test, y_predict_nn):.6f}")
+st.write(f"MAE: {MAE(y_test, y_predict_nn):.6f}")
+st.write(f"RMSE: {math.sqrt(mean_squared_error(y_test, y_predict_nn)):.6f}")
