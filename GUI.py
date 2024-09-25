@@ -27,10 +27,10 @@ lasso = Lasso(alpha=0.1).fit(X_train, y_train)
 nn = MLPRegressor(hidden_layer_sizes=(50, 50), max_iter=1000).fit(X_train, y_train)
 
 # Các hàm tính toán
-def NSE(y_test, y_predict):  # cang gan 1 cang tot
+def NSE(y_test, y_predict):  # càng gần 1 càng tốt
     return (1 - (np.sum((y_predict - y_test) ** 2) / np.sum((y_test - np.mean(y_test)) ** 2)))
 
-def MAE(y_test, y_predict):  # cang nho cang tot
+def MAE(y_test, y_predict):  # càng nhỏ càng tốt
     return mean_absolute_error(y_test, y_predict)
 
 # Giao diện người dùng với Streamlit
@@ -46,7 +46,8 @@ volume_value = st.text_input("Khối lượng giao dịch:", "")
 chg_value = st.text_input("% Thay đổi so với giá trước đó:", "")
 
 # Lựa chọn mô hình dự đoán
-model_choice = st.selectbox("Chọn mô hình dự đoán:", ("Linear Regression", "Lasso Regression", "Neural Network"))
+model_choice = st.selectbox("Chọn mô hình dự đoán:", 
+                            ("Linear Regression", "Lasso Regression", "Neural Network"))
 
 # Nút dự đoán
 if st.button("Dự đoán"):
@@ -55,17 +56,18 @@ if st.button("Dự đoán"):
             # Chuyển đổi giá trị đầu vào thành mảng numpy
             X_input = np.array([float(open_value), float(high_value), float(low_value), float(volume_value), float(chg_value)]).reshape(1, -1)
             
-            # Dự đoán với Linear Regression
-            y_input_predict_lr = reg.predict(X_input)
-            st.success(f"Kết quả dự đoán theo LinearRegression: {y_input_predict_lr[0]:.2f}")
+            # Dự đoán theo mô hình đã chọn
+            if model_choice == "Linear Regression":
+                y_input_predict = reg.predict(X_input)
+                st.success(f"Kết quả dự đoán theo Linear Regression: {y_input_predict[0]:.2f}")
             
-            # Dự đoán với Lasso Regression
-            y_input_predict_lasso = lasso.predict(X_input)
-            st.success(f"Kết quả dự đoán theo Lasso: {y_input_predict_lasso[0]:.2f}")
+            elif model_choice == "Lasso Regression":
+                y_input_predict = lasso.predict(X_input)
+                st.success(f"Kết quả dự đoán theo Lasso Regression: {y_input_predict[0]:.2f}")
             
-            # Dự đoán với Neural Network
-            y_input_predict_nn = nn.predict(X_input)
-            st.success(f"Kết quả dự đoán theo Neural Network: {y_input_predict_nn[0]:.2f}")
+            elif model_choice == "Neural Network":
+                y_input_predict = nn.predict(X_input)
+                st.success(f"Kết quả dự đoán theo Neural Network: {y_input_predict[0]:.2f}")
             
         except ValueError:
             st.error("Vui lòng nhập đúng định dạng số!")
