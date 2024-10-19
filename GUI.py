@@ -24,7 +24,7 @@ reg = LinearRegression().fit(X_train, y_train)
 lasso = Lasso(alpha=0.1).fit(X_train, y_train)
 
 # Mô hình Neural Network
-nn = MLPRegressor(hidden_layer_sizes=(50, 50), activation='relu', max_iter=1000).fit(X_train, y_train)
+nn = MLPRegressor(hidden_layer_sizes=(50, 50), max_iter=1000).fit(X_train, y_train)
 
 # Các hàm tính toán
 def NSE(y_test, y_predict):  # càng gần 1 càng tốt
@@ -59,15 +59,15 @@ if st.button("Dự đoán"):
             # Dự đoán theo mô hình đã chọn
             if model_choice == "Linear Regression":
                 y_input_predict = reg.predict(X_input)
-                st.success(f"Kết quả dự đoán theo Linear Regression: {y_input_predict[0]:.6f}")
+                st.success(f"Kết quả dự đoán theo Linear Regression: {y_input_predict[0]:.2f}")
             
             elif model_choice == "Lasso Regression":
                 y_input_predict = lasso.predict(X_input)
-                st.success(f"Kết quả dự đoán theo Lasso Regression: {y_input_predict[0]:.6f}")
+                st.success(f"Kết quả dự đoán theo Lasso Regression: {y_input_predict[0]:.2f}")
             
             elif model_choice == "Neural Network":
                 y_input_predict = nn.predict(X_input)
-                st.success(f"Kết quả dự đoán theo Neural Network: {y_input_predict[0]:.6f}")
+                st.success(f"Kết quả dự đoán theo Neural Network: {y_input_predict[0]:.2f}")
             
         except ValueError:
             st.error("Vui lòng nhập đúng định dạng số!")
@@ -81,7 +81,6 @@ st.write("Tỉ lệ dự đoán đúng trên tập: ")
 y_predict_lr = reg.predict(X_test)
 st.write("**Linear Regression**")
 st.write(f"R2: {r2_score(y_test, y_predict_lr):.6f}")
-st.write(f"NSE: {NSE(y_test, y_predict_lr):.6f}")
 st.write(f"MAE: {MAE(y_test, y_predict_lr):.6f}")
 st.write(f"RMSE: {math.sqrt(mean_squared_error(y_test, y_predict_lr)):.6f}")
 
@@ -89,7 +88,6 @@ st.write(f"RMSE: {math.sqrt(mean_squared_error(y_test, y_predict_lr)):.6f}")
 y_predict_lasso = lasso.predict(X_test)
 st.write("**Lasso Regression**")
 st.write(f"R2: {r2_score(y_test, y_predict_lasso):.6f}")
-st.write(f"NSE: {NSE(y_test, y_predict_lasso):.6f}")
 st.write(f"MAE: {MAE(y_test, y_predict_lasso):.6f}")
 st.write(f"RMSE: {math.sqrt(mean_squared_error(y_test, y_predict_lasso)):.6f}")
 
@@ -97,6 +95,5 @@ st.write(f"RMSE: {math.sqrt(mean_squared_error(y_test, y_predict_lasso)):.6f}")
 y_predict_nn = nn.predict(X_test)
 st.write("**Neural Network**")
 st.write(f"R2: {r2_score(y_test, y_predict_nn):.6f}")
-st.write(f"NSE: {NSE(y_test, y_predict_nn):.6f}")
 st.write(f"MAE: {MAE(y_test, y_predict_nn):.6f}")
 st.write(f"RMSE: {math.sqrt(mean_squared_error(y_test, y_predict_nn)):.6f}")
