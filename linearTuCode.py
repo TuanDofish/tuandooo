@@ -38,8 +38,6 @@ class LinearRegressionTuCode:
         return X_with_bias @ self.w #f(x)=X_T@W
 
     
-def NSE(y_test, y_pred):
-    return 1 - (np.sum((y_test - y_pred)**2) / np.sum((y_test - np.mean(y_test))**2))
 
 data = pd.read_csv('Gold_Price.csv')
 
@@ -56,6 +54,5 @@ reg.fit(X_train, y_train)
 y_pred = reg.predict(X_test)
 
 print('R2 score: ', r2_score(y_test, y_pred))
-print('NSE: ', NSE(y_test, y_pred))
 print('MAE: ', mean_absolute_error(y_test, y_pred))
 print('RMSE: ', np.sqrt(mean_squared_error(y_test, y_pred)))
